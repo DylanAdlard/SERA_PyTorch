@@ -25,7 +25,7 @@ class SERA(torch.autograd.Function):
         relevance = SERA.interpolator(y_true, true_bounds, control)
 
         # save tensors for backwards pass
-        y_true_tens, y_pred_tens = torch.tensor([y_true]), torch.tensor(y_pred)
+        y_true_tens, y_pred_tens = torch.tensor([y_true]), torch.tensor([y_pred])
         rel_tens, rel_contr = torch.tensor([relevance]), torch.tensor([control])
         ctx.save_for_backward(y_pred_tens, y_true_tens, rel_tens, rel_contr)
 
