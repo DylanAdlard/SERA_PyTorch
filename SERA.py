@@ -10,7 +10,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class SERA(torch.autrograd.Function):
+class SERA(torch.autograd.Function):
     """A PyTorch compatible, Python implementation of the SERA loss function"""
 
     @staticmethod
