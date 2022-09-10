@@ -1,13 +1,10 @@
 import collections
 import math
 
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy.integrate
 import scipy.interpolate
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
 
 class SERA(torch.autograd.Function):
@@ -144,13 +141,13 @@ class SERA(torch.autograd.Function):
 
         upper_adj = None
 
-        #determine lower adjacent value = 1st control point
+        # determine lower adjacent value = 1st control point
         for i in range(len(array)):
             if array[i] > lower_bound:
                 lower_adj = array[i]
                 break
 
-        #determine upper adjacent value = 3rd control point
+        # determine upper adjacent value = 3rd control point
         for i in range(len(array)):
             if array[i] >= upper_bound:
                 if array[i - 1]:
@@ -161,14 +158,14 @@ class SERA(torch.autograd.Function):
             upper_adj = np.max(array)
 
         interval = [i for i in array if (i > lower_bound) & (i < upper_bound)]
-        #determine median of the interval = 2nd control point
+        # determine median of the interval = 2nd control point
         centrality_val = np.median(interval)
 
         return np.array([lower_adj, centrality_val, upper_adj])
-    
+
     @staticmethod
     def _filter_outliers(y_true, y_pred, true_bounds):
-        '''remove outliers as determined by the boxplot and the medcouple'''
+        """remove outliers as determined by the boxplot and the medcouple"""
 
         filt_y_true, filt_y_pred = [], []
         for i in range(len(y_true)):
@@ -181,18 +178,18 @@ class SERA(torch.autograd.Function):
                 filt_y_pred.append(med)
 
         return (filt_y_true, filt_y_pred)
-    
+
     @staticmethod
     def _relevance_interval(array):
-        '''calculates the interval for which relevance is determined over'''
+        """calculates the interval for which relevance is determined over"""
 
-        #generate Tukey's boxplot
+        # generate Tukey's boxplot
         boxplot = SERA._boxplot(array)
 
-        #calculate the medcouple
+        # calculate the medcouple
         MC = SERA._medcouple(array)
 
-        #calculate the bounds of the interval, as per the original paper
+        # calculate the bounds of the interval, as per the original paper
         if MC >= 0:
             lower_bound = boxplot["q1"] - (1.5 * math.exp(-4 * MC) * boxplot["iqr"])
             upper_bound = boxplot["q3"] + (1.5 * math.exp(3 * MC) * boxplot["iqr"])
@@ -201,9 +198,9 @@ class SERA(torch.autograd.Function):
             upper_bound = boxplot["q3"] + (1.5 * math.exp(4 * MC) * boxplot["iqr"])
 
         return (lower_bound, upper_bound)
-    
+
     def _medcouple(array):
-        '''calculate the medcouple [Byrs et al. 2004]'''
+        """calculate the medcouple [Byrs et al. 2004]"""
 
         y = np.asarray(array, dtype=np.double).ravel()
         y = np.sort(y)
@@ -249,10 +246,10 @@ class SERA(torch.autograd.Function):
 
     @staticmethod
     def _boxplot(array):
-        '''Generate Tukey's boxplot and return the first and third quartile,
-        as well as the interquartile range.'''
+        """Generate Tukey's boxplot and return the first and third quartile,
+        as well as the interquartile range."""
 
         q3, q1 = np.percentile(array, [75, 25])
         iqr = q3 - q1
 
-        return {"q1": q1, "q3": q3, "iqr": iqr}    
+        return {"q1": q1, "q3": q3, "iqr": iqr}
