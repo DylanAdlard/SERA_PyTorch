@@ -9,7 +9,7 @@ Installation and Usage Instructions:
 - Prior to the forward pass, the target and predicted tensors must be cloned, detached, and converted to numpy arrays 
   -  **true_np = true_tens.clone().detach().numpy()**
   -  **pred_np = pred_tens.clone().detach().numpy()**
-- the forward pass is called by passing in the predicted and target arrays, as well as a set of 3 relevance values for the corresponding control points. These control points are a parameter of the function that can be manually tuned. 
+- the forward pass is called by passing in the predicted and target arrays, as well as a set of 3 relevance values for the corresponding control points. These relevance values are a parameter of the function that can be manually tuned. 
   -  **loss = loss_function(pred_np, true_np, [1, 0, 1])**
 - The backwards pass can be called via 
   -  **loss.backward()**
