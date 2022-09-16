@@ -14,6 +14,17 @@ class SERA(torch.autograd.Function):
     def foward(ctx, y_pred, y_true, control):
         """The forward Pass - returns the loss"""
 
+        # defense
+        assert (
+            y_pred.shape == y_true.shape
+        ), "the predicted and true arrays should be np arrays of equal length"
+        assert isinstance(control, list) or isinstance(
+            control, tuple
+        ), "the control set must be either a list or tuple"
+        assert (
+            len(control) == 3
+        ), "the control set should contain three floats or integers"
+
         # calculate the bounds of the skewness and outlier adjusted boxplot
         true_bounds = SERA._relevance_interval(y_true)
 
@@ -21,7 +32,7 @@ class SERA(torch.autograd.Function):
         # predictions from the predicted array
         y_true, y_pred = SERA._filter_outliers(y_true, y_pred, true_bounds)
 
-        # generate the 'relevance curve'=
+        # generate the 'relevance curve'
         relevance = SERA.interpolator(y_true, true_bounds, control)
 
         # save tensors for backwards pass
