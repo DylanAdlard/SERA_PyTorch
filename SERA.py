@@ -11,7 +11,7 @@ class SERA(torch.autograd.Function):
     """A PyTorch compatible, Python implementation of the SERA loss function"""
 
     @staticmethod
-    def foward(ctx, y_pred, y_true, control):
+    def forward(ctx, y_pred, y_true, control):
         """The forward Pass - returns the loss"""
 
         # defense
