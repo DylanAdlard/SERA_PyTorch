@@ -15,7 +15,4 @@ Installation and Usage Instructions:
   -  **loss.backward()**
 
 
-Please direct any correspondence to dylan.adlard@lmh.ox.ac.uk.
-
-
 [1] Ribeiro, R. P. & Moniz, N. Imbalanced regression and extreme value prediction. Mach Learn 109, 1803–1835 (2020).
